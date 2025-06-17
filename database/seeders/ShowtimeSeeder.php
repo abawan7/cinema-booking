@@ -20,7 +20,7 @@ class ShowtimeSeeder extends Seeder
         $start = Carbon::now()->addDay()->setTime(18, 0, 0); // Tomorrow, 6pm
         foreach ($theatres as $theatre_id) {
             foreach ($films as $film_id) {
-                for ($i = 0; $i < 2; $i++) { // 2 showtimes per film per theatre
+                for ($i = 0; $i < 2; $i++) { 
                     $showtimes[] = [
                         'theatre_id' => $theatre_id,
                         'film_id' => $film_id,
