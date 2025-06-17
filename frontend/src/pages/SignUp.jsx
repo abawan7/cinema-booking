@@ -19,6 +19,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    console.log(form);
     try {
       await register(form);
       navigate('/signin');
