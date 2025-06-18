@@ -6,28 +6,38 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\JWTAuth; // Use the correct service class
+
 
 class AuthController extends Controller
 {
+    protected $jwtAuth;
+
+    public function __construct(JWTAuth $jwtAuth)
+    {
+        $this->jwtAuth = $jwtAuth; // Inject the JWTAuth service
+    }
+
+    /**
+     * Register a new user.
+     */
     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-        ], [
-            'email.unique' => 'This email is already registered. Please choose another one.',
-            'password.confirmed' => 'Password confirmation does not match.',
         ]);
 
+        // Create the user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        $token = JWTAuth::fromUser($user);
+        // Generate a token for the user
+        $token = $this->jwtAuth->fromUser($user);  // Use the service method here
 
         return response()->json([
             'access_token' => $token,
@@ -36,26 +46,28 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Login an existing user.
+     */
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
         ]);
 
         $credentials = $request->only('email', 'password');
 
-        try {
-            if (!$token = JWTAuth::attempt($credentials)) {
-                throw ValidationException::withMessages([
-                    'email' => ['The provided credentials are incorrect.'],
-                ]);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create token, please try again later.'], 500);
+        // Attempt to authenticate the user
+        if (!$token = $this->jwtAuth->attempt($credentials)) {  // Use the service method here
+            // If authentication fails, return an error response
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
         }
 
-        $user = auth('api')->user();
+        // Get the authenticated user
+        $user = auth()->user();
 
         return response()->json([
             'access_token' => $token,
@@ -64,6 +76,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Logout the user.
+     */
     public function logout()
     {
         try {
@@ -74,6 +89,9 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Get the authenticated user.
+     */
     public function user()
     {
         return response()->json(auth('api')->user());
