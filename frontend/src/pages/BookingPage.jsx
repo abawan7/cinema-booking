@@ -122,217 +122,140 @@ const BookingPage = () => {
     const selectedFilmTitle = films.find(f => f.id == selectedFilm)?.title;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-            <div className="absolute inset-0 opacity-10" style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")` }}></div>
-
-            <div className="relative z-10 container mx-auto px-4 py-8">
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <h1 className="text-5xl font-bold text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">CineBook</h1>
-                    <p className="text-xl text-gray-300">Experience Movies Like Never Before</p>
+        <div className="w-full h-full flex items-center justify-center bg-[#181926]">
+            <div className="flex w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden bg-[#23243a]">
+                {/* Left: Cinema Image */}
+                <div className="hidden md:block w-1/2 bg-black">
+                    <img
+                        src="https://img.freepik.com/free-photo/rows-red-seats-theater_53876-64710.jpg?semt=ais_items_boosted&w=740"
+                        alt="Cinema Seats"
+                        className="object-cover w-full h-full rounded-l-2xl"
+                    />
                 </div>
-
-                {/* Error Message */}
-                {error && <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 backdrop-blur-sm">{error}</div>}
-
-                {/* Cinema Selection Dialog */}
-                {showCinemaDialog && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="bg-slate-800/95 backdrop-blur-sm rounded-2xl p-8 max-w-2xl w-full border border-purple-500/20 shadow-2xl">
-                            <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                                <MapPin className="text-purple-400" />
-                                Choose Your Cinema
+                {/* Right: Booking Form and Details */}
+                <div className="w-full md:w-1/2 flex flex-col justify-center p-12 bg-[#23243a] overflow-y-auto max-h-[90vh]">
+                    <h1 className="text-3xl font-bold text-white mb-4 text-center flex items-center justify-center gap-2">
+                        <Ticket className="w-8 h-8 text-red-400" /> Book Your Tickets
+                    </h1>
+                    {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+                    {/* Cinema Selection Dialog */}
+                    {showCinemaDialog ? (
+                        <div className="mb-8">
+                            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                                <MapPin className="text-red-400" /> Choose Your Cinema
                             </h2>
                             <div className="grid gap-4">
                                 {cinemas.map((cinema) => (
-                                    <div key={cinema.id} onClick={() => handleCinemaSelect(cinema.id)} className="p-6 bg-gradient-to-r from-slate-700/50 to-slate-600/50 rounded-xl cursor-pointer transform transition-all duration-300 hover:scale-105 hover:from-purple-600/30 hover:to-pink-600/30 border border-slate-600/50 hover:border-purple-500/50 group">
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <h3 className="text-xl font-semibold text-white group-hover:text-purple-200 transition-colors">{cinema.name}</h3>
-                                                <p className="text-gray-400 mt-1">Premium Experience</p>
-                                            </div>
-                                            <ChevronRight className="text-gray-400 group-hover:text-purple-400 transition-colors" />
-                                        </div>
+                                    <div key={cinema.id} onClick={() => handleCinemaSelect(cinema.id)} className="p-4 bg-[#23243a] border border-gray-700 rounded-lg cursor-pointer hover:border-red-400 transition flex items-center justify-between">
+                                        <span className="text-white font-medium">{cinema.name}</span>
+                                        <ChevronRight className="text-gray-400 group-hover:text-red-400 transition-colors" />
                                     </div>
                                 ))}
                             </div>
                         </div>
-                    </div>
-                )}
-
-                {/* Main Booking Interface */}
-                {!showCinemaDialog && (
-                    <div className="max-w-6xl mx-auto">
-                        {/* Progress Bar */}
-                        <div className="mb-8 bg-slate-800/50 rounded-full p-1 backdrop-blur-sm">
-                            <div className="flex items-center justify-between text-sm text-gray-400 px-4 py-2">
-                                <span className="text-purple-400 font-medium">Cinema: {selectedCinemaName}</span>
-                                {selectedFilmTitle && <span className="text-purple-400 font-medium">Film: {selectedFilmTitle}</span>}
-                                {selectedShowtime && <span className="text-purple-400 font-medium">Ready to Book</span>}
+                    ) : (
+                        <form className="space-y-6">
+                            {/* Film Selection */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-1 flex items-center gap-2">
+                                    <Film className="w-4 h-4" /> Select Film
+                                </label>
+                                <select
+                                    value={selectedFilm || ""}
+                                    onChange={(e) => handleFilmSelect(e.target.value)}
+                                    required
+                                    className="w-full p-3 bg-[#23243a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-400 transition"
+                                >
+                                    <option value="">Choose a Film</option>
+                                    {films.map((film) => (
+                                        <option value={film.id} key={film.id}>
+                                            {film.title}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-                        </div>
-
-                        <div className="grid lg:grid-cols-2 gap-8">
-                            {/* Booking Form */}
-                            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                                    <Ticket className="text-purple-400" />
-                                    Book Your Tickets
-                                </h2>
-
-                                <div className="space-y-6">
-                                    {/* Film Selection */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
-                                            <Film className="w-4 h-4" />
-                                            Select Film
-                                        </label>
-                                        <select
-                                            value={selectedFilm || ""}
-                                            onChange={(e) => handleFilmSelect(e.target.value)}
-                                            required
-                                            className="w-full p-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                            {/* Showtime Selection */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-1 flex items-center gap-2">
+                                    <Clock className="w-4 h-4" /> Select Showtime
+                                </label>
+                                <select
+                                    value={selectedShowtime || ""}
+                                    onChange={(e) => setSelectedShowtime(e.target.value)}
+                                    required
+                                    className="w-full p-3 bg-[#23243a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-400 transition"
+                                >
+                                    <option value="">Choose a Showtime</option>
+                                    {showtimes.map((showtime) => (
+                                        <option value={showtime.id} key={showtime.id}>
+                                            {showtime.start_time || showtime.time || 'Showtime'}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            {/* Number of Tickets */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-1 flex items-center gap-2">
+                                    <Users className="w-4 h-4" /> Number of Tickets
+                                </label>
+                                <input
+                                    type="number"
+                                    min={1}
+                                    max={30}
+                                    value={numTickets}
+                                    onChange={(e) => setNumTickets(Number(e.target.value))}
+                                    className="w-full p-3 bg-[#23243a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-400 transition"
+                                />
+                            </div>
+                            {/* Book Now Button */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (!selectedShowtime || numTickets < 1 || numTickets > 30) {
+                                        setError("Please select a valid showtime and number of tickets.");
+                                        return;
+                                    }
+                                    navigate('/select-seats', {
+                                        state: {
+                                            showtimeId: selectedShowtime,
+                                            numTickets,
+                                        }
+                                    });
+                                }}
+                                className="w-full py-3 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold text-lg shadow-md hover:from-red-600 hover:to-pink-600 transition"
+                            >
+                                Book Now
+                            </button>
+                        </form>
+                    )}
+                    {/* Bookings List */}
+                    <div className="mt-10">
+                        <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                            <Calendar className="text-red-400" /> Your Bookings
+                        </h2>
+                        <div className="space-y-4 max-h-40 overflow-y-auto">
+                            {bookings.length === 0 ? (
+                                <div className="text-gray-400">No bookings yet.</div>
+                            ) : (
+                                bookings.map((booking) => (
+                                    <div key={booking.id} className="p-4 bg-[#23243a] border border-gray-700 rounded-lg flex items-center justify-between">
+                                        <div>
+                                            <div className="text-white font-medium">{booking.film_title || 'Film'}</div>
+                                            <div className="text-gray-400 text-sm">Showtime: {booking.showtime_time || 'Time'}</div>
+                                            <div className="text-gray-400 text-sm">Tickets: {booking.num_tickets}</div>
+                                        </div>
+                                        <button
+                                            onClick={() => handleCancelBooking(booking.id)}
+                                            className="text-red-400 hover:text-red-600 transition"
                                         >
-                                            <option value="">Choose a Film</option>
-                                            {films.map((film) => (
-                                                <option value={film.id} key={film.id}>
-                                                    {film.title}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            <X className="w-5 h-5" />
+                                        </button>
                                     </div>
-
-                                    {/* Showtime Selection */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
-                                            <Clock className="w-4 h-4" />
-                                            Select Showtime
-                                        </label>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            {showtimes
-                                                .filter((showtime) => showtime.film_id == selectedFilm)
-                                                .map((showtime) => (
-                                                    <button
-                                                        key={showtime.id}
-                                                        type="button"
-                                                        onClick={() => setSelectedShowtime(showtime.id)}
-                                                        className={`p-4 rounded-xl border transition-all ${
-                                                            selectedShowtime == showtime.id
-                                                                ? 'bg-purple-600 border-purple-500 text-white'
-                                                                : 'bg-slate-700/50 border-slate-600 text-gray-300 hover:border-purple-500/50'
-                                                        }`}
-                                                    >
-                                                        <div className="font-semibold">{showtime.start_time}</div>
-                                                    </button>
-                                                ))}
-                                        </div>
-                                    </div>
-
-                                    {/* Ticket Quantity */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
-                                            <Users className="w-4 h-4" />
-                                            Number of Tickets
-                                        </label>
-                                        <div className="flex items-center gap-4">
-                                            <button
-                                                type="button"
-                                                onClick={() => setNumTickets(Math.max(1, numTickets - 1))}
-                                                className="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center text-white hover:bg-purple-600 transition-colors"
-                                            >
-                                                -
-                                            </button>
-                                            <input
-                                                type="number"
-                                                value={numTickets}
-                                                onChange={(e) => setNumTickets(parseInt(e.target.value) || 1)}
-                                                min="1"
-                                                max="30"
-                                                className="w-20 p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-center focus:ring-2 focus:ring-purple-500"
-                                                required
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => setNumTickets(Math.min(30, numTickets + 1))}
-                                                className="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center text-white hover:bg-purple-600 transition-colors"
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    {/* Submit Button */}
-                                    <button
-                                        onClick={handleBooking}
-                                        disabled={!selectedShowtime}
-                                        className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 disabled:hover:scale-100"
-                                    >
-                                        Book Tickets
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Your Bookings */}
-                            <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50">
-                                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                                    <Calendar className="text-purple-400" />
-                                    Your Bookings
-                                </h2>
-
-                                {bookings.length === 0 ? (
-                                    <div className="text-center py-12">
-                                        <Ticket className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                                        <p className="text-gray-400 text-lg">No bookings yet</p>
-                                        <p className="text-gray-500 text-sm mt-2">Your movie tickets will appear here</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        {bookings.map((booking) => (
-                                            <div
-                                                key={booking.id}
-                                                className="bg-gradient-to-r from-slate-700/50 to-slate-600/50 rounded-xl p-6 border border-slate-600/50"
-                                            >
-                                                <div className="flex items-center justify-between mb-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
-                                                            <Ticket className="w-6 h-6 text-white" />
-                                                        </div>
-                                                        <div>
-                                                            <h3 className="font-semibold text-white">
-                                                                {booking.showtime.film.title}
-                                                            </h3>
-                                                            <p className="text-gray-400 text-sm">
-                                                                Ref: {booking.reference}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => handleCancelBooking(booking.id)}
-                                                        className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
-                                                    >
-                                                        <X className="w-5 h-5" />
-                                                    </button>
-                                                </div>
-
-                                                <div className="grid grid-cols-2 gap-4 text-sm">
-                                                    <div className="flex items-center gap-2 text-gray-300">
-                                                        <Clock className="w-4 h-4" />
-                                                        {booking.showtime.start_time}
-                                                    </div>
-                                                    <div className="flex items-center gap-2 text-gray-300">
-                                                        <Users className="w-4 h-4" />
-                                                        {booking.num_tickets} seats
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                                ))
+                            )}
                         </div>
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );

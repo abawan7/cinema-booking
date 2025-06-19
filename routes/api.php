@@ -15,5 +15,6 @@ Route::middleware('auth:api')->get('/cinemas', [CinemaController::class, 'index'
 Route::middleware('auth:api')->get('/films', [FilmController::class, 'index']);
 Route::middleware('auth:api')->get('/bookings', [BookingController::class, 'index']);
 Route::middleware('auth:api')->post('/bookings', [BookingController::class, 'store']);
-Route::middleware('auth:api')->get('/showtime', [ShowtimeController::class, 'index']);
-Route::middleware('auth:api')->post('/showtime', [ShowtimeController::class, 'store']);
+Route::middleware('auth:api')->get('/showtimes', [ShowtimeController::class, 'index']);
+Route::middleware('auth:api')->post('/showtimes', [ShowtimeController::class, 'store']);
+Route::middleware('auth:api')->post('/reserved-seats', [ReservedSeatController::class, 'store']);

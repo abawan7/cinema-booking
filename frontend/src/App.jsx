@@ -5,6 +5,7 @@ import SignUp from './pages/SignUp';
 import './App.css'
 import BookingPage from "./pages/BookingPage";
 import Dashboard from "./pages/Dashboard";
+import SelectSeats from './pages/SelectSeats';
 
 function Home() {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/bookings" element={<BookingPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/select-seats" element={<SelectSeats />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

@@ -11,28 +11,30 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-            {/* Background decorations */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-20 blur-3xl"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full opacity-20 blur-3xl"></div>
-            </div>
-            <div className="relative w-full max-w-lg">
-                <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-10 text-center">
-                    <div className="flex justify-center mb-6">
-                        <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+        <div className="w-full h-full flex items-center justify-center bg-[#181926]">
+            <div className="flex w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden bg-[#23243a]">
+                {/* Left: Cinema Image */}
+                <div className="hidden md:block w-1/2 bg-black">
+                    <img
+                        src="https://img.freepik.com/free-photo/rows-red-seats-theater_53876-64710.jpg?semt=ais_items_boosted&w=740"
+                        alt="Cinema Seats"
+                        className="object-cover w-full h-full rounded-l-2xl"
+                    />
+                </div>
+                {/* Right: Dashboard Content */}
+                <div className="w-full md:w-1/2 flex flex-col justify-center p-12 bg-[#23243a]">
+                    <div className="flex flex-col items-center mb-8">
+                        <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-yellow-400 rounded-full flex items-center justify-center shadow-lg mb-4">
                             <Film className="w-8 h-8 text-white" />
                         </div>
+                        <h1 className="text-4xl font-bold text-white mb-2 text-center">Welcome to Your Dashboard</h1>
+                        <p className="text-gray-400 text-lg mb-6 text-center">
+                            Here you can view your details, manage bookings, and more.
+                        </p>
                     </div>
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
-                        Welcome to Your Dashboard
-                    </h1>
-                    <p className="text-gray-600 text-lg mb-8">
-                        Here you can view your details, manage bookings, and more.
-                    </p>
                     <button
                         onClick={goToBookings}
-                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 text-lg"
+                        className="w-full py-3 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold text-lg shadow-md hover:from-red-600 hover:to-pink-600 transition mb-4"
                     >
                         Go to Bookings
                     </button>
