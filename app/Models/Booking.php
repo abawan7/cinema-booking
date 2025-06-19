@@ -10,22 +10,22 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'showtime_id', 'reference', 'num_tickets'
+        'user_id', 'showtime_id', 'reference', 'num_tickets',
     ];
 
     /**
-     * Get the seats associated with the booking.
-     */
-    public function bookingSeats()
-    {
-        return $this->hasMany(BookingSeat::class);
-    }
-
-    /**
-     * Get the showtime for the booking.
+     * Get the showtime that owns the booking.
      */
     public function showtime()
     {
         return $this->belongsTo(Showtime::class);
+    }
+
+    /**
+     * Get the user that owns the booking.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
