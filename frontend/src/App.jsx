@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'r
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import './App.css'
+import BookingPage from "./pages/BookingPage";
+import Dashboard from "./pages/Dashboard";
 
 function Home() {
   const navigate = useNavigate();
@@ -24,6 +26,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/bookings" element={<BookingPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
