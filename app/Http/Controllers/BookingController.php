@@ -18,8 +18,18 @@ class BookingController extends Controller
      */
     public function index()
     {
-        // Fetch all bookings from the database
-        $bookings = Booking::where('user_id', auth()->id())->get();
+        $bookings = Booking::where('user_id', auth()->id())
+            ->with(['showtime.film']) // eager load showtime and film
+            ->get()
+            ->map(function ($booking) {
+                return [
+                    'id' => $booking->id,
+                    'film_title' => $booking->showtime->film->title ?? 'N/A',
+                    'showtime_time' => $booking->showtime->start_time ?? 'N/A',
+                    'num_tickets' => $booking->num_tickets,
+                ];
+            });
+
         return response()->json($bookings);
     }
 
