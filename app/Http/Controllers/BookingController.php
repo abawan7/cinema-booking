@@ -18,8 +18,8 @@ class BookingController extends Controller
     public function index()
     {
         // Fetch all bookings from the database
-        $bookings = Booking::all();
-        return response()->json($bookings);  // Return bookings as JSON
+        $bookings = Booking::where('user_id', auth()->id())->get();
+        return response()->json($bookings);
     }
 
     /**
@@ -47,4 +47,17 @@ class BookingController extends Controller
         // Return the newly created booking as JSON
         return response()->json($booking, 201);
     }
+    public function destroy($id)
+{
+    $booking = Booking::findOrFail($id);
+
+    // Optionally, check if the authenticated user owns the booking
+    if ($booking->user_id !== auth()->id()) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    $booking->delete();
+
+    return response()->json(['message' => 'Booking canceled successfully.']);
+}
 }

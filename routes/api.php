@@ -18,3 +18,4 @@ Route::middleware('auth:api')->post('/bookings', [BookingController::class, 'sto
 Route::middleware('auth:api')->get('/showtimes', [ShowtimeController::class, 'index']);
 Route::middleware('auth:api')->post('/showtimes', [ShowtimeController::class, 'store']);
 Route::middleware('auth:api')->post('/reserved-seats', [ReservedSeatController::class, 'store']);
+Route::middleware('auth:api')->delete('/bookings/{id}', [BookingController::class, 'destroy']);
