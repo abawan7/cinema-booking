@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::middleware('auth:api')->get('/cinemas', [CinemaController::class, 'index']);
-Route::middleware('auth:api')->get('/films', [FilmController::class, 'index']);
+Route::get('/cinemas', [CinemaController::class, 'index']);
+Route::get('/films', [FilmController::class, 'index']);
+Route::get('/showtimes', [ShowtimeController::class, 'index']);
+Route::get('/reserved-seats', [ReservedSeatController::class, 'index']);
 Route::middleware('auth:api')->get('/bookings', [BookingController::class, 'index']);
 Route::middleware('auth:api')->post('/bookings-with-seats', [BookingController::class, 'storeWithSeats']);
-Route::middleware('auth:api')->get('/showtimes', [ShowtimeController::class, 'index']);
 Route::middleware('auth:api')->post('/showtimes', [ShowtimeController::class, 'store']);
 Route::middleware('auth:api')->post('/reserved-seats', [ReservedSeatController::class, 'store']);
 Route::middleware('auth:api')->delete('/bookings/{id}', [BookingController::class, 'destroy']);
-Route::get('/reserved-seats', [ReservedSeatController::class, 'index']);

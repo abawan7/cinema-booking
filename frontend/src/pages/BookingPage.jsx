@@ -15,31 +15,37 @@ const BookingPage = () => {
     const [error, setError] = useState("");
     const [showCinemaDialog, setShowCinemaDialog] = useState(true);
     const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            navigate("/signin");
-            return;
+        setIsAuthenticated(!!localStorage.getItem('token'));
+        fetchCinemas();
+        if (localStorage.getItem('token')) {
+            fetchBookings();
         }
-        fetchData(token);
-    }, [navigate]);
+    }, []);
 
-    const fetchData = async (token) => {
+    const fetchCinemas = async () => {
         try {
-            // Fetch cinemas
-            const cinemasRes = await axios.get("http://localhost:8000/api/cinemas", {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const cinemasRes = await axios.get("http://localhost:8000/api/cinemas");
             setCinemas(cinemasRes.data);
+        } catch (err) {
+            setError("Failed to fetch cinemas.");
+            console.error(err);
+        }
+    };
 
-            // Fetch bookings
+    const fetchBookings = async () => {
+        try {
             const bookingsRes = await axios.get("http://localhost:8000/api/bookings", {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
             });
             setBookings(bookingsRes.data);
         } catch (err) {
-            setError("Failed to fetch data.");
+            // Only show error if user is authenticated
+            if (localStorage.getItem('token')) {
+                setError("Failed to fetch bookings.");
+            }
             console.error(err);
         }
     };
@@ -208,24 +214,34 @@ const BookingPage = () => {
                                 />
                             </div>
                             {/* Book Now Button */}
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    if (!selectedShowtime || numTickets < 1 || numTickets > 30) {
-                                        setError("Please select a valid showtime and number of tickets.");
-                                        return;
-                                    }
-                                    navigate('/select-seats', {
-                                        state: {
-                                            showtimeId: selectedShowtime,
-                                            numTickets,
+                            {isAuthenticated ? (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (!selectedShowtime || numTickets < 1 || numTickets > 30) {
+                                            setError("Please select a valid showtime and number of tickets.");
+                                            return;
                                         }
-                                    });
-                                }}
-                                className="w-full py-3 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold text-lg shadow-md hover:from-red-600 hover:to-pink-600 transition"
-                            >
-                                Book Now
-                            </button>
+                                        navigate('/select-seats', {
+                                            state: {
+                                                showtimeId: selectedShowtime,
+                                                numTickets,
+                                            }
+                                        });
+                                    }}
+                                    className="w-full py-3 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold text-lg shadow-md hover:from-red-600 hover:to-pink-600 transition"
+                                >
+                                    Book Now
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => navigate('/signin')}
+                                    className="w-full py-3 rounded-lg bg-gray-500 text-white font-bold text-lg shadow-md hover:bg-gray-600 transition"
+                                >
+                                    Login to Book
+                                </button>
+                            )}
                         </form>
                     )}
                     {/* Bookings List */}

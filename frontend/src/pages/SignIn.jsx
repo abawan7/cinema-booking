@@ -25,6 +25,9 @@ export default function SignIn() {
     try {
       const res = await login(form);
       localStorage.setItem('token', res.data.access_token);
+      if (res.data.user && res.data.user.name) {
+        localStorage.setItem('userName', res.data.user.name);
+      }
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
