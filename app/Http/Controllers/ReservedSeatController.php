@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 class ReservedSeatController extends Controller
 {
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Request $request)
     {
         $showtimeId = $request->query('showtime_id');
@@ -41,4 +45,4 @@ class ReservedSeatController extends Controller
 
         return response()->json($reservedSeat, 201);
     }
-} 
+}

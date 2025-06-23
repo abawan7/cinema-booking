@@ -13,6 +13,9 @@ class AuthController extends Controller
 {
     protected $jwtAuth;
 
+    /**
+     * @param JWTAuth $jwtAuth
+     */
     public function __construct(JWTAuth $jwtAuth)
     {
         $this->jwtAuth = $jwtAuth; // Inject the JWTAuth service

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\BookingSeat;
 use App\Models\Showtime;
-use App\Models\ReservedSeat; 
+use App\Models\ReservedSeat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -78,17 +78,22 @@ class BookingController extends Controller
             return response()->json(['error' => 'Failed to book seats', 'details' => $e->getMessage()], 500);
         }
     }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id)
-{
-    $booking = Booking::findOrFail($id);
+    {
+        $booking = Booking::findOrFail($id);
 
-    // Optionally, check if the authenticated user owns the booking
-    if ($booking->user_id !== auth()->id()) {
-        return response()->json(['message' => 'Unauthorized'], 403);
+        // Optionally, check if the authenticated user owns the booking
+        if ($booking->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $booking->delete();
+
+        return response()->json(['message' => 'Booking canceled successfully.']);
     }
-
-    $booking->delete();
-
-    return response()->json(['message' => 'Booking canceled successfully.']);
-}
 }
