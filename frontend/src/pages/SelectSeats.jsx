@@ -26,13 +26,13 @@ export default function SelectSeats() {
   const handleConfirm = async () => {
     if (selected.length === maxSelectable) {
       try {
-        await axios.post('http://localhost:8000/api/reserved-seats', {
+        await axios.post('http://localhost:8000/api/bookings-with-seats', {
           showtime_id: showtimeId,
           seats: selected,
         }, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
-        alert('Seats reserved successfully!');
+        alert('Booking and seats reserved successfully!');
         navigate('/dashboard');
       } catch (err) {
         alert('Failed to reserve seats.');

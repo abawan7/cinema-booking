@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\BookingSeat;
 use App\Models\Showtime;
+use App\Models\ReservedSeat; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -28,24 +29,44 @@ class BookingController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function storeWithSeats(Request $request)
     {
-        // Validate incoming data
-        $validatedData = $request->validate([
-            'showtime_id' => 'required|exists:showtimes,id', // Validate showtime_id
-            'num_tickets' => 'required|integer|min:1|max:30', // Validate num_tickets
+        $validated = $request->validate([
+            'showtime_id' => 'required|exists:showtimes,id',
+            'seats' => 'required|array|min:1',
+            'seats.*' => 'string',
+            // Add other fields as needed (e.g., num_tickets)
         ]);
 
-        // Create the booking with the validated data
-        $booking = Booking::create([
-            'user_id' => auth()->user()->id,  // Assuming the user is authenticated
-            'showtime_id' => $validatedData['showtime_id'],
-            'reference' => strtoupper(\Illuminate\Support\Str::random(8)), // Generate random reference
-            'num_tickets' => $validatedData['num_tickets'],
-        ]);
+        $user = auth()->user();
 
-        // Return the newly created booking as JSON
-        return response()->json($booking, 201);
+        // Start transaction
+        \DB::beginTransaction();
+        try {
+            // Create booking
+            $booking = Booking::create([
+                'user_id' => $user->id,
+                'showtime_id' => $validated['showtime_id'],
+                'reference' => strtoupper(\Illuminate\Support\Str::random(8)),
+                'num_tickets' => count($validated['seats']),
+            ]);
+
+            // Reserve seats
+            foreach ($validated['seats'] as $seat) {
+                ReservedSeat::create([
+                    'showtime_id' => $validated['showtime_id'],
+                    'seat_label' => $seat,
+                ]);
+                // Optionally, add to booking_seats table
+                // BookingSeat::create(['booking_id' => $booking->id, 'seat_number' => $seat]);
+            }
+
+            \DB::commit();
+            return response()->json(['booking' => $booking], 201);
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return response()->json(['error' => 'Failed to book seats', 'details' => $e->getMessage()], 500);
+        }
     }
     public function destroy($id)
 {

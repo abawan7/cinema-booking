@@ -5,6 +5,7 @@ use App\Http\Controllers\CinemaController; // Add this import for CinemaControll
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\ShowtimeController;
+use App\Http\Controllers\ReservedSeatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +15,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:api')->get('/cinemas', [CinemaController::class, 'index']);
 Route::middleware('auth:api')->get('/films', [FilmController::class, 'index']);
 Route::middleware('auth:api')->get('/bookings', [BookingController::class, 'index']);
-Route::middleware('auth:api')->post('/bookings', [BookingController::class, 'store']);
+Route::middleware('auth:api')->post('/bookings-with-seats', [BookingController::class, 'storeWithSeats']);
 Route::middleware('auth:api')->get('/showtimes', [ShowtimeController::class, 'index']);
 Route::middleware('auth:api')->post('/showtimes', [ShowtimeController::class, 'store']);
 Route::middleware('auth:api')->post('/reserved-seats', [ReservedSeatController::class, 'store']);
