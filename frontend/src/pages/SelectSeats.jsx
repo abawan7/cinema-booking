@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-// Example reserved seats (in a real app, fetch from backend)
-const reservedSeats = ['A3', 'A4', 'B5', 'C7', 'D2', 'E10', 'F1', 'G8', 'H6', 'I9', 'J12'];
 const rows = 'ABCDEFGHIJ'.split('');
 const cols = Array.from({ length: 12 }, (_, i) => i + 1);
 
@@ -13,6 +11,23 @@ export default function SelectSeats() {
   const { showtimeId, numTickets } = location.state || {};
   const maxSelectable = numTickets || 1;
   const [selected, setSelected] = useState([]);
+  const [reservedSeats, setReservedSeats] = useState([]);
+
+  // Fetch reserved seats for the selected showtime
+  useEffect(() => {
+    if (!showtimeId) return;
+    const fetchReservedSeats = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8000/api/reserved-seats?showtime_id=${showtimeId}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        setReservedSeats(res.data.map(seat => seat.seat_label));
+      } catch (err) {
+        setReservedSeats([]); // fallback to empty if error
+      }
+    };
+    fetchReservedSeats();
+  }, [showtimeId]);
 
   const handleSeatClick = (seat) => {
     if (reservedSeats.includes(seat)) return;

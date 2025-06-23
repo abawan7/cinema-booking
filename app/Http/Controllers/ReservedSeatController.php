@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 
 class ReservedSeatController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $showtimeId = $request->query('showtime_id');
+        $query = \App\Models\ReservedSeat::query();
+        if ($showtimeId) {
+            $query->where('showtime_id', $showtimeId);
+        }
+        return response()->json($query->get());
+    }
+
     /**
      * Reserve a seat for a showtime.
      */
